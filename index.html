@@ -1,0 +1,865 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Clarksville's FY2027 budget as a model: set the tax rate, growth and department funding, and see ten years of consequences.">
+<meta property="og:title" content="Clarksville Budget Sandbox">
+<meta property="og:description" content="Built on the FY2027 budget book. Move any dial and watch ten years redraw.">
+<meta property="og:type" content="website">
+<style>html,body{background:#141A21}html{-webkit-text-size-adjust:100%}</style>
+<title>Clarksville Budget Sandbox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#141A21; --panel:#1B232C; --panel-2:#222C36; --panel-3:#2A3540;
+  --line:#2E3A45; --line-2:#41505D;
+  --ink:#E9E5DB; --ink-2:#A5B0BA; --ink-3:#6E7B87;
+  --brass:#C9973F; --rev:#6CA8D9; --cost:#D9765C;
+  --good:#71A66C; --warn:#D9A441; --bad:#C45C4A;
+  --fd:"Oswald","Helvetica Neue",Arial,sans-serif;
+  --fb:"Public Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --fm:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fb);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:18px;padding-block:0 56px;transition:box-shadow .2s ease}
+.wrap.off{box-shadow:inset 0 0 0 3px var(--bad)}
+.sbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;margin-inline:-18px;margin-bottom:30px;
+  padding:11px 18px;display:flex;flex-wrap:wrap;align-items:center;gap:5px 12px;
+  font-size:13.5px;border-bottom:1px solid var(--line);background:var(--panel);color:var(--ink-2)}
+.sbar strong{font-family:var(--fd);font-size:15px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;color:var(--ink)}
+.sdot{width:9px;height:9px;border-radius:50%;background:var(--good);flex:none}
+.swhy{min-width:0}
+.sfig{margin-left:auto;font-size:12.5px;white-space:nowrap;color:var(--ink-3)}
+.wrap.off .sbar{background:var(--bad);border-bottom-color:var(--bad);color:#F7E3DE}
+.wrap.off .sbar strong{color:#fff}
+.wrap.off .sdot{background:#fff}
+.wrap.off .sfig{color:#F2CFC7}
+@media(max-width:560px){.sfig{margin-left:0;width:100%}}
+.wrap>.kicker{padding-top:2px}
+h1,h2{margin:0;font-family:var(--fd);font-weight:500;text-wrap:balance}
+h1{font-size:clamp(28px,5.5vw,42px);font-weight:600;line-height:1.03}
+.kicker{font-family:var(--fm);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);margin:0 0 9px}
+.lede{color:var(--ink-2);max-width:60ch;margin:11px 0 0}
+.mono{font-family:var(--fm);font-variant-numeric:tabular-nums}
+
+.presets{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.presets button{font-family:var(--fb);font-size:13px;color:var(--ink-2);background:var(--panel);border:1px solid var(--line-2);border-radius:99px;padding:7px 15px;cursor:pointer}
+.presets button:hover{background:var(--panel-3);color:var(--ink);border-color:var(--brass)}
+.presets button:focus-visible,input[type=range]:focus-visible{outline:2px solid var(--brass);outline-offset:3px}
+
+.codebar{display:grid;grid-template-columns:1fr;gap:16px 26px;margin-top:18px;padding:15px 16px;
+  background:var(--panel);border:1px solid var(--line);border-radius:4px}
+@media(min-width:680px){.codebar{grid-template-columns:1fr 1fr}}
+.cb-k{font-family:var(--fm);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:7px}
+.cb-row{display:flex;gap:8px}
+.cb-in{flex:1;min-width:0;background:var(--panel-2);border:1px solid var(--line-2);border-radius:3px;
+  color:var(--ink);font-family:var(--fm);font-size:13.5px;padding:8px 11px;letter-spacing:.04em}
+.cb-in::placeholder{color:var(--ink-3);letter-spacing:.04em}
+.cb-in:focus{outline:2px solid var(--brass);outline-offset:1px}
+.cb-code{color:var(--brass);font-weight:500;cursor:text}
+.codebar button{flex:none;font-family:var(--fb);font-size:13px;color:var(--ink-2);background:var(--panel-2);
+  border:1px solid var(--line-2);border-radius:3px;padding:8px 15px;cursor:pointer}
+.codebar button:hover{background:var(--panel-3);color:var(--ink);border-color:var(--brass)}
+.codebar button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.cb-msg{font-size:12.5px;margin-top:6px;min-height:17px;color:var(--ink-3)}
+.cb-msg.err{color:var(--bad)}
+.cb-msg.ok{color:var(--good)}
+.grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:20px;align-items:start}
+@media(min-width:860px){.grid{grid-template-columns:minmax(0,1fr) minmax(0,1.12fr)}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:4px}
+.card>h2{font-size:12.5px;font-weight:500;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);padding:13px 16px;border-bottom:1px solid var(--line);font-family:var(--fm)}
+.pad{padding:16px}
+
+.lev{padding:14px 16px;border-bottom:1px solid var(--line)}
+.lev:last-child{border-bottom:0}
+.lev-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:2px}
+.lev-name{font-size:14.5px;font-weight:500}
+.lev-val{font-family:var(--fm);font-size:15px;font-weight:500;font-variant-numeric:tabular-nums;color:var(--brass);flex:none}
+.lev-note{font-size:12px;color:var(--ink-3);margin-bottom:8px;line-height:1.4}
+.sec-label{font-family:var(--fm);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);padding:11px 16px 4px;background:var(--panel-2);border-bottom:1px solid var(--line)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:16px;background:transparent;margin:0;display:block;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:3px;background:var(--panel-3);border-radius:2px}
+input[type=range]::-moz-range-track{height:3px;background:var(--panel-3);border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:2px;background:var(--brass);margin-top:-6.5px}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:2px;background:var(--brass);border:0}
+
+.verdict{padding:17px 18px;border-bottom:1px solid var(--line);border-left:3px solid var(--good)}
+.verdict.warn{border-left-color:var(--warn)}
+.verdict.bad{border-left-color:var(--bad)}
+.verdict h2{font-size:22px;font-weight:600;line-height:1.14;margin-bottom:6px}
+.verdict p{margin:0;font-size:14px;color:var(--ink-2)}
+
+.plot{padding:14px 12px 4px}
+.plot svg{display:block;width:100%;height:auto}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:12px;color:var(--ink-2);padding:0 16px 12px}
+.legend span{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.legend i{width:18px;height:0;border-top:2.5px solid;flex:none}
+
+.years{display:flex;gap:2px;padding:8px 16px 14px}
+.ycell{flex:1;min-width:0}
+.ybox{position:relative;height:56px}
+.ybox i{position:absolute;left:0;right:0;border-radius:1px;transition:top .18s ease,height .18s ease,background .18s ease}
+.zero{position:absolute;left:0;right:0;border-top:1px dashed var(--line-2);pointer-events:none}
+.ybox u{position:absolute;left:-1px;right:-1px;height:0;border-top:2px dotted var(--brass);opacity:.85;transition:top .18s ease}
+.years b{font-family:var(--fm);font-size:9px;font-weight:400;color:var(--ink-3);text-align:center;margin-top:5px;display:block}
+
+.meters{padding:6px 16px 16px}
+.mrow{display:flex;align-items:center;gap:11px;padding:7px 0}
+.mrow .nm{font-size:13.5px;width:140px;flex:none}
+.mrow .tr{flex:1;height:6px;background:var(--panel-3);border-radius:3px;overflow:hidden;min-width:0}
+.mrow .tr i{display:block;height:100%;transition:width .18s ease,background .18s ease}
+.mrow .st{font-family:var(--fm);font-size:11.5px;width:66px;flex:none;text-align:right}
+@media(max-width:420px){.mrow .nm{width:104px;font-size:12.5px}.mrow .st{width:58px;font-size:11px}}
+
+.lostcalc{padding:12px 16px;border-bottom:1px solid var(--line);background:var(--panel-2);font-family:var(--fm);font-size:11.5px;line-height:1.75;color:var(--ink-3)}
+.lostcalc b{color:var(--ink);font-weight:500}
+.lostcalc em{color:var(--brass);font-style:normal}
+.tally{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.tally div{background:var(--panel-2);padding:12px 11px}
+.tally .k{font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:3px}
+.tally .v{font-family:var(--fd);font-size:18px;font-weight:600;font-variant-numeric:tabular-nums}
+.work{margin-top:16px}
+.rates{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line);border-bottom:1px solid var(--line)}
+@media(min-width:620px){.rates{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.rates div{background:var(--panel-2);padding:13px 16px}
+.rates .k{font-family:var(--fm);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:4px}
+.rates .v{font-family:var(--fd);font-size:21px;font-weight:600;font-variant-numeric:tabular-nums;display:block}
+.rates .n{font-size:12px;color:var(--ink-3);display:block;margin-top:2px;line-height:1.4}
+.sgroup{font-family:var(--fm);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--brass);padding:16px 16px 6px;border-top:1px solid var(--line)}
+.step{padding:5px 16px 9px}
+.slabel{font-size:13px;color:var(--ink-2);margin-bottom:3px}
+.smath{font-family:var(--fm);font-size:12.5px;line-height:1.75;color:var(--ink-3);overflow-wrap:break-word}
+.smath n{color:var(--brass);font-style:normal}
+.smath r{color:var(--ink);font-weight:500;font-style:normal}
+.tblwrap{overflow-x:auto;border-top:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;min-width:600px;font-family:var(--fm);font-size:12px;font-variant-numeric:tabular-nums}
+th{text-align:right;font-weight:400;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);padding:10px 12px;border-bottom:1px solid var(--line-2);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+td{text-align:right;padding:7px 12px;border-bottom:1px solid var(--line);color:var(--ink-2);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.pos{color:var(--good)}td.neg{color:var(--bad)}td.warn{color:var(--warn)}
+footer{margin-top:30px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-3);max-width:70ch}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<style>
+.dept-oper{font-family:var(--fm);font-size:11.5px;line-height:1.5;margin-top:7px;color:var(--ink-3)}
+.dept-oper b{color:var(--ink);font-weight:500}
+.dept-oper.gone{color:var(--bad)}
+.dept-oper.gone b{color:var(--bad)}
+.dept-oper.cutting{color:#fff;background:var(--bad);padding:5px 8px;border-radius:3px;display:block}
+.dept-oper.cutting b{color:#fff}
+.trackwrap{position:relative;padding-top:2px}
+.floormark{position:absolute;top:0;bottom:8px;width:2px;background:var(--bad);opacity:.75;pointer-events:none}
+.floormark::after{content:"";position:absolute;top:-3px;left:-2px;border-left:3px solid transparent;border-right:3px solid transparent;border-top:4px solid var(--bad)}
+.fixedrow{padding:13px 16px;border-top:1px solid var(--line);background:var(--panel-2);font-size:13px;color:var(--ink-3)}
+.fixedrow b{color:var(--ink-2);font-weight:500}
+.srcnote{font-size:12px;color:var(--ink-3);margin:10px 0 0;line-height:1.5}
+.srcnote b{color:var(--ink-2);font-weight:500}
+.lev-right{display:flex;align-items:center;gap:8px;flex:none}
+.whyb{width:19px;height:19px;border-radius:50%;border:1px solid var(--line-2);background:transparent;
+  color:var(--ink-3);font-family:var(--fb);font-size:11px;font-weight:600;line-height:1;cursor:pointer;padding:0;flex:none}
+.whyb:hover{border-color:var(--brass);color:var(--brass)}
+.whyb[aria-expanded="true"]{background:var(--brass);color:#1A130A;border-color:var(--brass)}
+.whyb:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.lev-why{margin-top:10px;padding:10px 12px;background:var(--panel-2);border-left:2px solid var(--brass);
+  font-size:12.5px;line-height:1.65;color:var(--ink-2)}
+.lev-why b{color:var(--ink);font-weight:500}
+.badge{font-family:var(--fm);font-size:8.5px;letter-spacing:.09em;text-transform:uppercase;
+  padding:2px 6px;border-radius:2px;background:var(--panel-3);color:var(--ink-3);margin-left:8px;white-space:nowrap}
+.lev.gated input[type=range]::-webkit-slider-thumb{background:var(--ink-3)}
+.lev.gated input[type=range]::-moz-range-thumb{background:var(--ink-3)}
+.gatenote{padding:11px 16px;border-bottom:1px solid var(--line);font-size:12.5px;line-height:1.6;color:var(--ink-3)}
+.gatenote b{color:var(--warn);font-weight:500}
+.gatewarn{margin-top:10px;padding:10px 12px;background:rgba(217,164,65,.09);border-left:2px solid var(--warn);
+  font-size:12.5px;line-height:1.6;color:var(--ink-2)}
+.gatewarn b{color:var(--warn);font-weight:500}
+.gatewarn button{margin-top:8px;font-family:var(--fb);font-size:12px;color:var(--ink-2);background:transparent;
+  border:1px solid var(--line-2);border-radius:3px;padding:4px 10px;cursor:pointer}
+.gatewarn button:hover{border-color:var(--warn);color:var(--ink)}
+.gatewarn button:focus-visible{outline:2px solid var(--warn);outline-offset:2px}
+.explain{float:right;font-family:var(--fb);font-size:12px;font-weight:400;letter-spacing:0;text-transform:none;
+  color:var(--ink-2);background:var(--panel-2);border:1px solid var(--line-2);border-radius:99px;
+  padding:3px 11px;cursor:pointer;margin-top:-3px}
+.explain:hover{border-color:var(--brass);color:var(--ink)}
+.explain:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="wrap" id="wrap">
+<div class="sbar" id="sbar">
+  <span class="sdot" id="sdot"></span>
+  <strong id="sbar-state">-</strong>
+  <span class="swhy" id="sbar-why">-</span>
+  <span class="sfig mono" id="sbar-fig"></span>
+</div>
+<p class="kicker">City of Clarksville &middot; adopted FY2027 budget &middot; ten years out</p>
+<h1>Clarksville Budget Sandbox</h1>
+<p class="lede">Built on the city&rsquo;s FY2027 budget book. Every dial changes the next ten years the moment you move it. Cut a department far enough and you pass the point where the payroll is covered but there is no money left for fuel, parts or supplies. The sliders show you exactly where that line is.</p>
+
+<div class="presets" id="presets"></div>
+
+<div class="codebar">
+  <div class="cb-side">
+    <label class="cb-k" for="code-out">Your configuration code</label>
+    <div class="cb-row">
+      <input type="text" id="code-out" class="cb-in cb-code" readonly spellcheck="false">
+      <button type="button" id="code-copy">Copy</button>
+    </div>
+  </div>
+  <div class="cb-side">
+    <label class="cb-k" for="code-in">Load someone else&rsquo;s</label>
+    <div class="cb-row">
+      <input type="text" id="code-in" class="cb-in" placeholder="CV2-XXXX-XXXX-XXXX-XXXX" spellcheck="false" autocomplete="off">
+      <button type="button" id="code-load">Load</button>
+    </div>
+    <div class="cb-msg" id="code-msg"></div>
+  </div>
+</div>
+
+<div class="grid">
+ <div class="card">
+  <h2>The dials <button type="button" class="explain" id="explain-all" aria-pressed="false">Explain every dial</button></h2>
+  <div class="sec-label">What the city collects</div>
+  <div id="lev-a"></div>
+  <div class="sec-label">Local option sales tax</div>
+  <div class="gatenote"><b>Neither of these is the city&rsquo;s to set.</b> The rate takes a referendum; the split is written into state law. They are here because what they are worth is worth knowing, not because a mayor can move them.</div>
+  <div id="lev-s"></div>
+  <div class="lostcalc" id="lostcalc"></div>
+  <div class="sec-label">What the city faces</div>
+  <div id="lev-b"></div>
+  <div class="sec-label">What the city funds</div>
+  <div id="lev-c"></div>
+  <div class="fixedrow" id="fixedrow"></div>
+  <div class="sec-label">Fund balance policy</div>
+  <div id="lev-d"></div>
+ </div>
+
+ <div>
+  <div class="card">
+   <div class="verdict" id="verdict"><h2 id="v-title">-</h2><p id="v-sub">-</p></div>
+   <div class="legend">
+    <span><i style="border-color:var(--rev)"></i><span id="lg-rev">Revenue</span></span>
+    <span><i style="border-color:var(--cost)"></i>Cost of services</span>
+   </div>
+   <div class="plot"><svg id="chart" viewBox="0 0 640 220" role="img" aria-labelledby="ct cd"><title id="ct">Revenue against the cost of services</title><desc id="cd">Two lines over eleven years; the band between them is the annual surplus or shortfall.</desc></svg></div>
+   <div class="sec-label" style="border-top:1px solid var(--line)">Fund balance, year by year <span style="text-transform:none;letter-spacing:0;float:right;color:var(--brass)">&middot;&middot;&middot; required minimum</span></div>
+   <div class="years" id="years"></div>
+   <div class="sec-label">Service levels in 2036</div>
+   <div class="meters" id="meters"></div>
+   <div class="tally">
+    <div><span class="k">Sales tax</span><span class="v mono" id="t-lost">-</span></div>
+    <div><span class="k">Per penny</span><span class="v mono" id="t-penny">-</span></div>
+    <div><span class="k">Net, 2036</span><span class="v mono" id="t-bal">-</span></div>
+    <div><span class="k">Fund balance</span><span class="v mono" id="t-res">-</span></div>
+    <div><span class="k">Required floor</span><span class="v mono" id="t-floor">-</span></div>
+    <div><span class="k">Operating funded</span><span class="v mono" id="t-oper">-</span></div>
+   </div>
+  </div>
+ </div>
+</div>
+
+<div class="card work">
+ <h2>The arithmetic</h2>
+ <div class="rates" id="rates"></div>
+ <div class="steps" id="steps"></div>
+ <div class="sec-label">Year by year</div>
+ <div class="tblwrap"><table id="tbl"></table></div>
+</div>
+
+<footer>
+<p style="margin:0 0 10px">Every starting figure is taken from the City of Clarksville Fiscal Year 2027 budget book, from the columns headed &ldquo;FY2027 Proposed&rdquo; in the Mayor&rsquo;s transmitted budget of May 1, 2026: a $8.06B assessed tax base, $81,436,513 of property tax at the adopted $1.01 rate, $34,168,124 of local option sales tax, $189,435,257 of total revenue, and $187,894,893 of total expenditures against $153,586,035 of department appropriations. Each department is split into its salary-and-wage accounts and its operating accounts exactly as the budget book reports them.</p>
+<p style="margin:0">Property tax revenue grows only with the tax base, because Tennessee&rsquo;s certified tax rate law makes reappraisal revenue-neutral, so rising home values alone never appear here as new money. Debt service, transit, and the shared and agency obligations are shown as fixed, because they are: they are contractual or intergovernmental and a council cannot cut them in a budget session. Rates are dollars per $100 of assessed value.</p>
+</footer>
+</div>
+
+<script>
+(function(){
+var E=function(i){return document.getElementById(i)};
+function fm(n){var s=n<0?"−":"";n=Math.abs(n);
+  if(n>=1e9)return s+"$"+(n/1e9).toFixed(2)+"B";
+  if(n>=1e6)return s+"$"+(n/1e6).toFixed(1)+"M";
+  if(n>=1e3)return s+"$"+Math.round(n/1e3)+"K";
+  return s+"$"+Math.round(n)}
+function clamp(v,a,b){return v<a?a:v>b?b:v}
+
+/* ---- FY2027 budget book, City of Clarksville ---- */
+var P0=187000, YRS=11, Y0=2026;
+var BASE_PC=43118;        // assessed value per resident ($8.063B / 187,000)
+var SALES_PC=28110;       // taxable sales per resident, set so 2.5% x 26% = $34,168,124
+var OTHER_PC=394.82;         // all revenue that is not property tax or local option
+var FIXED0=34308858;      // debt service, transit, agencies, shared obligations
+var BUDGET0=187894893;    // total FY27 expenditures and financing uses
+
+var DEPTS=[
+ {id:"safety", name:"Police, fire, dispatch", tot:92927851, pers:78191676, oper:10999779, off:+.001,
+  buys:"fuel, vehicle maintenance, turnout gear, radios, ammunition, evidence supplies and training"},
+ {id:"streets",name:"Street department",      tot:20243086, pers: 9356216, oper:10125870, off:+.005,
+  buys:"asphalt, salt, signs, striping, mowing, culverts and equipment repair"},
+ {id:"parks",  name:"Parks, rec and golf",    tot:13354395, pers: 8913238, oper: 3919336, off:-.005,
+  buys:"mowing, pool chemicals, field and court maintenance, program supplies and utilities"},
+ {id:"general",name:"General government",     tot:27060703, pers:14874931, oper: 5913437, off:-.003,
+  buys:"utilities, software licences, the annual audit, outside legal work and building repairs"}
+];
+DEPTS.forEach(function(d){d.cap=d.tot-d.pers-d.oper; d.floor=d.pers/d.tot*100;});
+
+var LEV=[
+ {box:"lev-a",id:"rate",name:"Property tax rate",min:.5,max:2.5,step:.01,v:1.01,f:"rate",
+  note:"The FY27 adopted rate, up nine cents from $0.92. Raises $81.4M on an $8.06B assessed base."},
+ {box:"lev-a",id:"othg",name:"Sales and fee growth",min:0,max:4,step:.1,v:2.0,f:"pcty",
+  note:"Retail sales, fees and state-shared taxes per resident. Unlike the property tax, this side rises with prices on its own."},
+ {box:"lev-s",id:"lost",name:"Local option rate",min:0,max:2.75,step:.05,v:2.50,f:"pct2",
+  badge:"Referendum", gate:2.50,
+  note:"Added to the state's 7 percent. Montgomery County is at 2.50, for 9.50 all in, against a statutory ceiling of 2.75.",
+  warn:"A rate change takes <b>a referendum</b>, not a council vote. The county or the city passes an ordinance calling it, and a majority has to approve it at the polls. The combined ceiling is 2.75%, and a city-only increment is fragile: it terminates if the county later levies at an equal or higher rate. Nothing on this slider is something a mayor can schedule."},
+ {box:"lev-s",id:"share",name:"Share the city keeps",min:0,max:100,step:1,v:26,f:"pct",
+  badge:"State law", gate:26,
+  note:"Half of a countywide levy goes to education off the top by statute, and the city keeps only part of what is left. Raising the local rate is worth about a quarter to the city of what the headline suggests.",
+  warn:"The split is <b>set in state law</b>: half of a countywide levy goes to education on the school attendance formula, and the rest follows where it was collected. A city cannot vote itself a larger share. The two routes are an <b>interlocal agreement with Montgomery County</b>, which state law does permit, or the <b>General Assembly</b>. Both are measured in years, and neither is in the city's gift. Treat any number here as an argument to go make, not a lever to pull."},
+ {box:"lev-s",id:"sales",name:"Taxable sales per resident",min:8000,max:40000,step:10,v:28110,f:"money",
+  note:"Set so the calculation reproduces the $34,168,124 of local option sales tax in the FY27 budget."},
+ {box:"lev-b",id:"grow",name:"Population growth",min:0,max:4,step:.1,v:2.1,f:"pcty",
+  note:"Clarksville has run 2 to 3 percent for a decade, roughly 4,000 people a year."},
+ {box:"lev-b",id:"infl",name:"Cost inflation",min:0,max:5,step:.1,v:1.9,f:"pcty",
+  note:"Wages, asphalt, fuel and insurance, before a single new resident arrives."},
+ {box:"lev-b",id:"mult",name:"Each new resident costs",min:.7,max:2,step:.05,v:1.15,f:"mult",
+  note:"Compared with someone already here. Above 1 means growth on the edge; below 1 means filling in where there is spare capacity."},
+ {box:"lev-c",id:"f-safety", name:"Police, fire, dispatch", min:40,max:115,step:1,v:100,f:"pct"},
+ {box:"lev-c",id:"f-streets",name:"Street department",      min:40,max:115,step:1,v:100,f:"pct"},
+ {box:"lev-c",id:"f-parks",  name:"Parks, rec and golf",    min:40,max:115,step:1,v:100,f:"pct"},
+ {box:"lev-c",id:"f-general",name:"General government",     min:40,max:115,step:1,v:100,f:"pct"},
+ {box:"lev-d",id:"res0",name:"Fund balance today",min:0,max:40,step:1,v:17,f:"pctbud",
+  note:"As a share of the annual budget. The FY27 book projects an ending balance of $40.8M, or 21.7 percent of total expenditures. At 17 percent the city is sitting exactly on the policy minimum with nothing above it."},
+ {box:"lev-d",id:"floor",name:"Required minimum",min:0,max:35,step:1,v:17,f:"pctbud2",
+  note:"The city may not carry a fund balance below this share of the annual budget. The dollar figure rises every year the budget does."}
+];
+
+var BASE={rate:1.01,othg:2.0,lost:2.50,share:26,sales:28110,grow:2.1,infl:1.9,mult:1.15,
+  res0:17,floor:17,"f-safety":100,"f-streets":100,"f-parks":100,"f-general":100};
+function mix(o){var r={},k;for(k in BASE)r[k]=BASE[k];for(k in o)r[k]=o[k];return r}
+var PRESETS=[
+ {n:"FY27 as adopted",      s:mix({})},
+ {n:"Pay for it with rate",  s:mix({rate:1.36})},
+ {n:"Cut every department 10%", s:mix({"f-safety":90,"f-streets":90,"f-parks":90,"f-general":90})},
+ {n:"Strip the operating budgets", s:mix({"f-safety":85,"f-streets":47,"f-parks":67,"f-general":55})},
+ {n:"Cut into payroll",      s:mix({"f-safety":80,"f-streets":42,"f-parks":60,"f-general":50})},
+ {n:"Spare public safety",   s:mix({"f-safety":100,"f-streets":60,"f-parks":70,"f-general":70})},
+ {n:"Growth doubles",        s:mix({grow:4.0})},
+ {n:"Costs run hot",         s:mix({infl:3.2})},
+ {n:"If the city kept half", s:mix({share:50})}
+];
+
+function fmt(f,n){
+  if(f==="rate")return "$"+n.toFixed(2);
+  if(f==="pcty")return n.toFixed(1)+"%/yr";
+  if(f==="mult")return n.toFixed(2)+"×";
+  if(f==="pct")return Math.round(n)+"%";
+  if(f==="pct2")return n.toFixed(2)+"%";
+  if(f==="money")return "$"+Math.round(n).toLocaleString();
+  if(f==="pctbud"||f==="pctbud2")return Math.round(n)+"% · "+fm(n/100*BUDGET0);
+  return String(n);
+}
+
+LEV.forEach(function(l){
+  var d=document.createElement("div");d.className="lev"+(l.gate!==undefined?" gated":"");
+  var dep=null;DEPTS.forEach(function(x){if("f-"+x.id===l.id)dep=x});
+  var mark="";
+  if(dep){
+    var pos=(dep.floor-l.min)/(l.max-l.min)*100;
+    mark='<span class="floormark" style="left:calc('+pos.toFixed(2)+'% - 1px)" title="Payroll only: operating budget gone"></span>';
+  }
+  d.innerHTML='<div class="lev-top"><span class="lev-name">'+l.name+
+    (l.badge?'<span class="badge">'+l.badge+'</span>':'')+'</span>'+
+    '<span class="lev-right"><span class="lev-val" id="o-'+l.id+'">'+fmt(l.f,l.v)+'</span>'+
+    '<button type="button" class="whyb" id="w-'+l.id+'" aria-expanded="false" aria-controls="why-'+l.id+'" '+
+    'title="What does moving this do?" aria-label="What moving '+l.name+' does">?</button></span></div>'+
+    (l.note?'<div class="lev-note">'+l.note+'</div>':'')+
+    '<div class="trackwrap">'+mark+
+      '<input type="range" id="'+l.id+'" min="'+l.min+'" max="'+l.max+'" step="'+l.step+'" value="'+l.v+'" '+
+      'aria-label="'+l.name+'" title="'+(l.note?l.note.replace(/"/g,"&quot;"):l.name)+'">'+
+    '</div>'+
+    '<div class="lev-why" id="why-'+l.id+'" hidden></div>'+
+    (l.gate!==undefined?'<div class="gatewarn" id="gate-'+l.id+'" hidden></div>':'')+
+    (dep?'<div class="dept-oper" id="do-'+dep.id+'"></div>':'');
+  E(l.box).appendChild(d);
+});
+E("presets").innerHTML=PRESETS.map(function(p,i){return '<button type="button" data-i="'+i+'">'+p.n+'</button>'}).join("");
+E("meters").innerHTML=DEPTS.map(function(d){
+  return '<div class="mrow"><span class="nm">'+d.name+'</span>'+
+    '<span class="tr"><i id="m-'+d.id+'"></i></span>'+
+    '<span class="st" id="s-'+d.id+'"></span></div>'}).join("");
+E("years").innerHTML=Array.apply(null,{length:YRS}).map(function(_,i){
+  return '<div class="ycell"><div class="ybox"><i id="y-'+i+'"></i><u id="fl-'+i+'"></u>'+
+    (i===0?'<span class="zero" id="zline"></span>':'')+'</div>'+
+    '<b>'+(i%2===0?("'"+String(Y0+i).slice(2)):"")+'</b></div>'}).join("");
+
+function v(id){return parseFloat(E(id).value)}
+
+/* a cut lands on capital first, then operating, then payroll */
+function split(d,f){
+  var funded=d.tot*f, cut=Math.max(0,d.tot-funded);
+  var cap=Math.max(0,d.cap-cut); cut=Math.max(0,cut-d.cap);
+  var oper=Math.max(0,d.oper-cut); cut=Math.max(0,cut-d.oper);
+  var pers=d.pers-cut;
+  if(f>1)oper=d.oper+(funded-d.tot);
+  var disc=d.oper+d.cap;
+  return {funded:funded,cap:cap,oper:oper,pers:pers,persCut:cut,
+    discShare:disc?(oper+cap)/disc:1, persShare:cut/d.pers};
+}
+
+function model(){
+  var rate=v("rate"), g=v("grow")/100, mult=v("mult"), infl=v("infl")/100, othg=v("othg")/100;
+  var lost=v("lost")/100, share=v("share")/100, salesPC=v("sales"), floorPct=v("floor")/100;
+  var fund={},sp={};
+  DEPTS.forEach(function(x){fund[x.id]=v("f-"+x.id)/100; sp[x.id]=split(x,fund[x.id]);});
+  var need={};DEPTS.forEach(function(x){need[x.id]=x.tot});
+  var fixed=FIXED0;
+  var d={rev:[],cost:[],res:[],pop:[],floor:[]}, res=v("res0")/100*BUDGET0, broke=-1, breach=-1;
+  for(var t=0;t<YRS;t++){
+    var pop=P0*Math.pow(1+g,t);
+    if(t>0){DEPTS.forEach(function(x){need[x.id]*=(1+infl+x.off)*(1+g*mult)}); fixed*=(1+infl);}
+    var esc=Math.pow(1+othg,t);
+    var lostPC=salesPC*esc*lost*share;
+    var rev=pop*BASE_PC*rate/100 + pop*lostPC + pop*OTHER_PC*esc;
+    var cost=fixed; DEPTS.forEach(function(x){cost+=need[x.id]*fund[x.id]});
+    if(t===0){d.sales0=pop*salesPC;d.lostAll=pop*salesPC*lost;d.lostCity=pop*lostPC;
+      d.prop0=pop*BASE_PC*rate/100;d.assessed0=pop*BASE_PC;d.other0=pop*OTHER_PC;d.fixed0=fixed;}
+    res+=rev-cost;
+    var fl=cost*floorPct;
+    if(res<0&&broke<0)broke=t;
+    if(res<fl&&breach<0)breach=t;
+    d.rev.push(rev);d.cost.push(cost);d.res.push(res);d.pop.push(pop);d.floor.push(fl);
+  }
+  d.svc={};d.worst=null;d.split=sp;d.fund=fund;
+  DEPTS.forEach(function(x){
+    var s=sp[x.id];
+    var per=(s.discShare-1)*18 - s.persShare*90;
+    var lvl=clamp(70+per*(YRS-1),0,100);
+    d.svc[x.id]=lvl;
+    if(!d.worst||lvl<d.svc[d.worst.id])d.worst=x;
+  });
+  d.broke=broke;d.breach=breach;d.rate=rate;
+  d.infl=infl;d.g=g;d.mult=mult;d.othg=othg;d.lost=lost;d.share=share;d.salesPC=salesPC;
+  d.revCAGR=Math.pow(d.rev[YRS-1]/d.rev[0],1/(YRS-1))-1;
+  d.costCAGR=Math.pow(d.cost[YRS-1]/d.cost[0],1/(YRS-1))-1;
+  return d;
+}
+
+var PAD={l:52,r:12,t:12,b:26};
+function X(i,W){return PAD.l+i*(W-PAD.l-PAD.r)/(YRS-1)}
+function Y(val,H,lo,hi){return H-PAD.b-(val-lo)/(hi-lo)*(H-PAD.t-PAD.b)}
+function chart(d){
+  var W=640,H=220,hi=0;
+  d.rev.concat(d.cost).forEach(function(x){if(x>hi)hi=x});
+  var step=Math.pow(10,Math.floor(Math.log10(hi/4)));
+  var n=hi/4/step;step*=(n<=1?1:n<=2?2:n<=2.5?2.5:n<=5?5:10);
+  var top=Math.ceil(hi*1.04/step)*step, ticks=Math.round(top/step), s="",i;
+  for(i=0;i<=ticks;i++){
+    var val=step*i, y=Y(val,H,0,top);
+    s+='<line x1="'+PAD.l+'" y1="'+y.toFixed(1)+'" x2="'+(W-PAD.r)+'" y2="'+y.toFixed(1)+'" style="stroke:var(--line);stroke-width:1"/>'+
+       '<text x="'+(PAD.l-8)+'" y="'+(y+4).toFixed(1)+'" text-anchor="end" style="fill:var(--ink-3);font-family:var(--fm);font-size:10px">'+
+       (val===0?"$0":"$"+Math.round(val/1e6)+"M")+'</text>';
+  }
+  for(i=0;i<YRS;i+=2)
+    s+='<text x="'+X(i,W).toFixed(1)+'" y="'+(H-PAD.b+16)+'" text-anchor="middle" style="fill:var(--ink-3);font-family:var(--fm);font-size:10px">'+(Y0+i)+'</text>';
+  var up=[],dn=[];
+  for(i=0;i<YRS;i++){up.push(X(i,W).toFixed(1)+","+Y(d.rev[i],H,0,top).toFixed(1));
+                     dn.push(X(i,W).toFixed(1)+","+Y(d.cost[i],H,0,top).toFixed(1));}
+  var short=d.cost[YRS-1]>d.rev[YRS-1];
+  s+='<polygon points="'+up.join(" ")+" "+dn.slice().reverse().join(" ")+
+     '" style="fill:'+(short?"var(--cost)":"var(--good)")+';opacity:.15"/>';
+  s+='<polyline points="'+up.join(" ")+'" style="fill:none;stroke:var(--rev);stroke-width:2.5;stroke-linejoin:round"/>';
+  s+='<polyline points="'+dn.join(" ")+'" style="fill:none;stroke:var(--cost);stroke-width:2.5;stroke-linejoin:round"/>';
+  s+='<circle cx="'+X(YRS-1,W)+'" cy="'+Y(d.rev[YRS-1],H,0,top).toFixed(1)+'" r="4" style="fill:var(--rev);stroke:var(--panel);stroke-width:2"/>';
+  s+='<circle cx="'+X(YRS-1,W)+'" cy="'+Y(d.cost[YRS-1],H,0,top).toFixed(1)+'" r="4" style="fill:var(--cost);stroke:var(--panel);stroke-width:2"/>';
+  E("chart").innerHTML='<title id="ct">Revenue against the cost of services</title>'+
+    '<desc id="cd">The band between the lines is the annual surplus or shortfall.</desc>'+s;
+}
+function listOf(arr,lower){
+  var n=arr.map(function(x){return lower?x.name.toLowerCase():x.name});
+  if(n.length===1)return n[0];
+  if(n.length===2)return n[0]+" and "+n[1];
+  return n.slice(0,-1).join(", ")+" and "+n[n.length-1];
+}
+function word(s){return s>=80?"Strong":s>=62?"Sound":s>=45?"Strained":s>=25?"Failing":"Collapsed"}
+function col(s){return s>=62?"var(--good)":s>=45?"var(--warn)":"var(--bad)"}
+
+/* ---- configuration codes ---- */
+var D36="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", CODEV="CV2", BODY;
+function slots(){return LEV.map(function(l){
+  return {id:l.id,min:l.min,step:l.step,n:Math.round((l.max-l.min)/l.step)+1}})}
+BODY=(function(){var t=1n;slots().forEach(function(sl){t*=BigInt(sl.n)});return (t-1n).toString(36).length})();
+function sum36(b){var c=0,w=1;for(var k=0;k<b.length;k++){c=(c+D36.indexOf(b.charAt(k))*w)%36;w=(w*5)%36;}return c}
+function group(t){var o=[];for(var k=0;k<t.length;k+=4)o.push(t.slice(k,k+4));return o.join("-")}
+function encode(){
+  var n=0n;
+  slots().forEach(function(sl){
+    var i=Math.round((parseFloat(E(sl.id).value)-sl.min)/sl.step);
+    i=Math.max(0,Math.min(sl.n-1,i));
+    n=n*BigInt(sl.n)+BigInt(i);
+  });
+  var out=n.toString(36).toUpperCase();
+  while(out.length<BODY)out="0"+out;
+  return CODEV+"-"+group(out+D36[sum36(out)]);
+}
+function decode(txt){
+  var raw=String(txt).toUpperCase().replace(/[^0-9A-Z]/g,""),k;
+  if(raw.length===BODY+1+CODEV.length&&raw.indexOf(CODEV)===0)raw=raw.slice(CODEV.length);
+  if(raw.length!==BODY+1)return {err:"That code should be "+(BODY+1)+" characters. This one has "+raw.length+"."};
+  var body=raw.slice(0,BODY), ck=raw.slice(BODY);
+  if(D36[sum36(body)]!==ck)return {err:"That code has a typo in it. Check it against the original."};
+  var n=0n;
+  for(k=0;k<body.length;k++){
+    var dg=D36.indexOf(body[k]);
+    if(dg<0)return {err:"That code has a character I don't recognise."};
+    n=n*36n+BigInt(dg);
+  }
+  var sl=slots(), vals={};
+  for(k=sl.length-1;k>=0;k--){
+    var m=BigInt(sl[k].n), i=Number(n%m); n=n/m;
+    var dp=(String(sl[k].step).split(".")[1]||"").length;
+    vals[sl[k].id]=parseFloat((sl[k].min+i*sl[k].step).toFixed(dp));
+  }
+  if(n!==0n)return {err:"That code is out of range."};
+  return {vals:vals};
+}
+function msg(t,cls){var m=E("code-msg");m.textContent=t;m.className="cb-msg"+(cls?" "+cls:"")}
+E("code-copy").addEventListener("click",function(){
+  var f=E("code-out"); f.select(); f.setSelectionRange(0,99);
+  var done=false; try{done=document.execCommand("copy")}catch(e){}
+  if(!done&&navigator.clipboard){navigator.clipboard.writeText(f.value).then(
+    function(){msg("Copied.","ok")},function(){msg("Press ⌘C or Ctrl+C to copy.")});return}
+  msg(done?"Copied.":"Press ⌘C or Ctrl+C to copy.",done?"ok":"");
+});
+E("code-load").addEventListener("click",function(){
+  var txt=E("code-in").value.trim();
+  if(!txt){msg("Paste a code first.","err");return}
+  var r=decode(txt);
+  if(r.err){msg(r.err,"err");return}
+  Object.keys(r.vals).forEach(function(k){if(E(k))E(k).value=r.vals[k]});
+  E("code-in").value=""; render(); msg("Loaded.","ok");
+});
+E("code-in").addEventListener("keydown",function(e){if(e.key==="Enter")E("code-load").click()});
+E("code-in").addEventListener("input",function(){msg("")});
+
+function render(){
+  LEV.forEach(function(l){E("o-"+l.id).textContent=fmt(l.f,v(l.id))});
+  var d=model();
+  E("lg-rev").textContent="Revenue at $"+d.rate.toFixed(2);
+  chart(d);
+
+  /* department operating readouts */
+  DEPTS.forEach(function(x){
+    var s=d.split[x.id], el=E("do-"+x.id), cutPct=(1-s.oper/x.oper)*100;
+    if(s.persCut>0){
+      el.className="dept-oper cutting";
+      el.innerHTML='<b>Operating budget eliminated.</b> No fuel, no parts, no supplies, no maintenance, and still '+
+        fm(s.persCut)+' short, which can only come out of payroll ('+Math.round(s.persShare*100)+'% of it).';
+    }else if(s.oper<=x.oper*0.02){
+      el.className="dept-oper gone";
+      el.innerHTML='<b>Operating budget eliminated.</b> Payroll of '+fm(x.pers)+' is covered and every dollar for fuel, parts, supplies and maintenance is gone.';
+    }else{
+      el.className="dept-oper";
+      el.innerHTML='Operating <b>'+fm(s.oper)+'</b> of '+fm(x.oper)+
+        (cutPct>0.5?' · <b>'+Math.round(cutPct)+'% cut</b>':'')+
+        ' · payroll '+fm(x.pers)+' held';
+    }
+  });
+  E("fixedrow").innerHTML='<b>Fixed obligations '+fm(d.fixed0)+'</b>: debt service, transit, and the shared and agency commitments. '+
+    'Contractual or intergovernmental, so no slider touches them.';
+
+  var lost=v("lost"), share=v("share");
+  E("lostcalc").innerHTML=
+    '<b>'+fm(d.sales0)+'</b> taxable sales &times; <b>'+lost.toFixed(2)+'%</b> = <b>'+fm(d.lostAll)+'</b> collected in the city<br>'+
+    'city keeps <b>'+Math.round(share)+'%</b> = <em>'+fm(d.lostCity)+'</em> to the general fund'+
+    ' · '+fm(d.lostAll-d.lostCity)+' to schools and county';
+
+  /* the arithmetic */
+  function M(n){var sg=n<0?"−":"";n=Math.abs(n);
+    return sg+"$"+(n>=1e9?(n/1e9).toFixed(2)+"B":(n/1e6).toFixed(1)+"M")}
+  function pc(x,dp){return (x*100).toFixed(dp===undefined?1:dp)+"%"}
+  function N(x){return "<n>"+x+"</n>"} function R(x){return "<r>"+x+"</r>"}
+  var L=YRS-1, pop0=d.pop[0], gapPts=(d.costCAGR-d.revCAGR)*100;
+  E("rates").innerHTML=
+    '<div><span class="k">Revenue grows</span><span class="v" style="color:var(--rev)">'+pc(d.revCAGR)+'</span>'+
+      '<span class="n">a year, blended across property tax, sales tax and fees</span></div>'+
+    '<div><span class="k">Cost grows</span><span class="v" style="color:var(--cost)">'+pc(d.costCAGR)+'</span>'+
+      '<span class="n">a year, from prices plus the people being added</span></div>'+
+    '<div><span class="k">The difference</span><span class="v" style="color:'+(gapPts>0?'var(--bad)':'var(--good)')+'">'+
+      (gapPts>0?"+":"−")+Math.abs(gapPts).toFixed(1)+' pts</span>'+
+      '<span class="n">compounded over eleven years, this is the whole story</span></div>';
+  var st="";
+  st+='<div class="sgroup">What the city collects in 2026</div>';
+  st+='<div class="step"><div class="slabel">Assessed value of everything taxable</div><div class="smath">'+
+      N(Math.round(pop0).toLocaleString())+' residents × '+N("$43,118")+' assessed each = '+R(M(d.assessed0))+'</div></div>';
+  st+='<div class="step"><div class="slabel">Property tax</div><div class="smath">'+
+      R(M(d.assessed0))+' × '+N("$"+d.rate.toFixed(2))+' ÷ $100 of assessed value = '+R(M(d.prop0))+'</div></div>';
+  st+='<div class="step"><div class="slabel">Local option sales tax the city keeps</div><div class="smath">'+
+      M(d.sales0)+' taxable sales × '+N(pc(d.lost,2))+' × '+N(pc(d.share,0))+' = '+R(M(d.lostCity))+'</div></div>';
+  st+='<div class="step"><div class="slabel">Everything else: fees, fines, state-shared taxes, in-lieu transfers</div><div class="smath">'+
+      N(Math.round(pop0).toLocaleString())+' × '+N("$395")+' each = '+R(M(d.other0))+'</div></div>';
+  st+='<div class="step"><div class="slabel">Total revenue, 2026</div><div class="smath">'+
+      M(d.prop0)+' + '+M(d.lostCity)+' + '+M(d.other0)+' = '+R(M(d.rev[0]))+'</div></div>';
+  st+='<div class="sgroup">What the city spends in 2026</div>';
+  var lines=[];
+  DEPTS.forEach(function(x){
+    var s=d.split[x.id];
+    lines.push(x.name+' '+M(x.tot)+' × '+N(Math.round(d.fund[x.id]*100)+"%")+' = '+R(M(s.funded))+
+      ' <span style="color:var(--ink-3)">(payroll '+M(s.pers)+', operating '+M(s.oper)+')</span>');
+  });
+  lines.push('Fixed obligations '+R(M(d.fixed0))+' <span style="color:var(--ink-3)">(debt service, transit, agencies)</span>');
+  st+='<div class="step"><div class="slabel">Each department, at the funding level you set</div><div class="smath">'+
+      lines.join('<br>')+'<br>total = '+R(M(d.cost[0]))+'</div></div>';
+  st+='<div class="sgroup">What changes each year after that</div>';
+  st+='<div class="step"><div class="slabel">Population</div><div class="smath">'+
+      '× (1 + '+N(pc(d.g))+') a year, so '+Math.round(pop0).toLocaleString()+' becomes '+R(Math.round(d.pop[L]).toLocaleString())+' by 2036</div></div>';
+  st+='<div class="step"><div class="slabel">Cost of a department</div><div class="smath">'+
+      '× (1 + '+N(pc(d.infl))+' inflation) × (1 + '+N(pc(d.g))+' growth × '+N(d.mult.toFixed(2)+"×")+' per new resident) = × '+
+      R(((1+d.infl)*(1+d.g*d.mult)).toFixed(4))+'</div></div>';
+  st+='<div class="step"><div class="slabel">Property tax</div><div class="smath">'+
+      '× (1 + '+N(pc(d.g))+') only, because the rate is fixed and reappraisal is revenue-neutral by law, so rising values add nothing</div></div>';
+  st+='<div class="step"><div class="slabel">Sales tax and fees</div><div class="smath">'+
+      '× (1 + '+N(pc(d.g))+' more people) × (1 + '+N(pc(d.othg))+' higher prices) = × '+
+      R(((1+d.g)*(1+d.othg)).toFixed(4))+'</div></div>';
+  st+='<div class="sgroup">The fund balance</div>';
+  st+='<div class="step"><div class="slabel">Where it starts</div><div class="smath">'+
+      N(Math.round(v("res0"))+"%")+' × '+M(BUDGET0)+' budget = '+R(M(v("res0")/100*BUDGET0))+'</div></div>';
+  st+='<div class="step"><div class="slabel">Each year</div><div class="smath">last year’s balance + (revenue − cost)</div></div>';
+  st+='<div class="step"><div class="slabel">What policy requires you to hold</div><div class="smath">'+
+      N(Math.round(v("floor"))+"%")+' × that year’s budget, which is '+R(M(d.floor[0]))+' in 2026, rising to '+R(M(d.floor[L]))+' in 2036</div></div>';
+  st+='<div class="sgroup">Where it lands in 2036</div>';
+  var bal=d.rev[L]-d.cost[L];
+  st+='<div class="step"><div class="slabel">That year alone</div><div class="smath">'+
+      M(d.rev[L])+' revenue − '+M(d.cost[L])+' cost = '+R(M(bal))+'</div></div>';
+  st+='<div class="step"><div class="slabel">The fund balance, after eleven years</div><div class="smath">'+
+      R(M(d.res[L]))+' held against '+R(M(d.floor[L]))+' required'+
+      (d.res[L]<d.floor[L]?' <span style="color:var(--bad)">· short by '+M(d.floor[L]-d.res[L])+'</span>':
+                           ' <span style="color:var(--good)">· clear by '+M(d.res[L]-d.floor[L])+'</span>')+'</div></div>';
+  E("steps").innerHTML=st;
+
+  var tb='<tr><th>Year</th><th>People</th><th>Revenue</th><th>Cost</th><th>Net</th><th>Fund balance</th><th>Required</th></tr>';
+  for(var k=0;k<YRS;k++){
+    var nt=d.rev[k]-d.cost[k], rr=d.res[k], ff=d.floor[k];
+    tb+='<tr><td>'+(Y0+k)+'</td><td>'+Math.round(d.pop[k]).toLocaleString()+'</td><td>'+M(d.rev[k])+'</td><td>'+M(d.cost[k])+'</td>'+
+      '<td class="'+(nt>=0?'pos':'neg')+'">'+(nt>=0?'+':'')+M(nt)+'</td>'+
+      '<td class="'+(rr<0?'neg':(rr<ff?'warn':'pos'))+'">'+M(rr)+'</td><td>'+M(ff)+'</td></tr>';
+  }
+  E("tbl").innerHTML=tb;
+
+  /* fund balance strip */
+  var H=56, hiP=0, hiN=0;
+  d.res.forEach(function(r){if(r>hiP)hiP=r;if(-r>hiN)hiN=-r});
+  d.floor.forEach(function(f){if(f>hiP)hiP=f});
+  if(hiP<=0)hiP=1;
+  var zero=hiP/((hiP+hiN)||1)*H;
+  for(var i=0;i<YRS;i++){
+    var r=d.res[i], fl=d.floor[i], el=E("y-"+i), h;
+    if(r>=0){h=Math.max(2,r/hiP*zero);el.style.top=(zero-h)+"px";}
+    else{h=Math.max(2,(-r)/(hiN||1)*(H-zero));el.style.top=zero+"px";}
+    el.style.height=h+"px";
+    el.style.background=r<0?"var(--bad)":(r<fl?"var(--warn)":"var(--good)");
+    E("fl-"+i).style.top=(zero-fl/hiP*zero)+"px";
+    el.parentNode.parentNode.title=(Y0+i)+": "+fm(r)+" held, "+fm(fl)+" required";
+  }
+  E("zline").style.top=zero+"px";
+
+  DEPTS.forEach(function(x){
+    var s=d.svc[x.id];
+    var m=E("m-"+x.id);m.style.width=clamp(s,2,100)+"%";m.style.background=col(s);
+    var stt=E("s-"+x.id);stt.textContent=word(s);stt.style.color=col(s);
+  });
+
+  E("t-penny").textContent=fm(d.assessed0/10000);
+  E("t-lost").textContent=fm(d.lostCity);
+  var tb2=E("t-bal");tb2.textContent=(bal>=0?"+":"−")+fm(Math.abs(bal)).replace("−","");
+  tb2.style.color=bal>=0?"var(--good)":"var(--bad)";
+  var last=d.res[L], lastFl=d.floor[L];
+  var tr=E("t-res");tr.textContent=fm(last);
+  tr.style.color=last<0?"var(--bad)":(last<lastFl?"var(--warn)":"var(--ink)");
+  E("t-floor").textContent=fm(lastFl);
+  var operNow=0, operAll=0;
+  DEPTS.forEach(function(x){operNow+=Math.min(d.split[x.id].oper,x.oper); operAll+=x.oper;});
+  var operPct=operAll?operNow/operAll*100:100;
+  var to=E("t-oper");to.textContent=Math.round(operPct)+"%";
+  to.style.color=operPct>=97?"var(--ink)":(operPct>=70?"var(--warn)":"var(--bad)");
+
+  /* verdict */
+  var vb=E("verdict"), vt=E("v-title"), vs=E("v-sub"), cls="", title="", sub="";
+  var worstS=d.svc[d.worst.id];
+  var stripped=DEPTS.filter(function(x){return d.split[x.id].oper<=x.oper*0.02});
+  var payrollCut=DEPTS.filter(function(x){return d.split[x.id].persCut>0});
+  if(payrollCut.length){
+    cls="bad";title="You are cutting people now.";
+    sub=listOf(payrollCut,true)+(payrollCut.length>1?" no longer have":" no longer has")+
+      " an operating budget at all, and the cut has gone into payroll. "+
+      "Everything below that line is positions, not supplies.";
+  }else if(stripped.length){
+    cls="bad";title="Paid, and unable to work.";
+    sub=listOf(stripped,false)+(stripped.length>1?" still meet payroll and have":" still meets payroll and has")+
+      " nothing left for fuel, parts, supplies or maintenance. "+
+      "The fund balance ends at "+fm(d.res[L])+" against "+fm(lastFl)+" required.";
+  }else if(d.broke>=0){
+    cls="bad";title="The money runs out in "+(Y0+d.broke)+".";
+    sub="The fund balance goes negative that year and reaches "+fm(d.res[L])+" by 2036"+
+      (d.breach>=0&&d.breach<d.broke?", having already fallen through the "+Math.round(v("floor"))+" percent policy floor in "+(Y0+d.breach):"")+
+      ". Tennessee does not let a city spend money it does not have.";
+  }else if(d.breach>=0){
+    cls="bad";title="The fund balance drops below policy in "+(Y0+d.breach)+".";
+    sub="The city may not carry less than "+Math.round(v("floor"))+" percent of its annual budget, which is "+
+      fm(d.floor[d.breach])+" that year and "+fm(lastFl)+" by 2036. The balance is still positive, "+
+      fm(d.res[L])+" at the end, but positive is not the standard.";
+  }else if(worstS<45){
+    cls="warn";title="Solvent, and wearing thin.";
+    sub="A fund balance of "+fm(d.res[L])+" in 2036, with "+d.worst.name.toLowerCase()+
+      " worn down by a decade of operating cuts.";
+  }else if(bal< -0.005*d.cost[L]){
+    cls="warn";title="Holding, but drawing down.";
+    sub="Services stay sound and the balance is still "+fm(d.res[L])+", though 2036 spends "+fm(-bal)+" more than it collects.";
+  }else{
+    cls="";title="Ten years, and the city still works.";
+    sub="A fund balance of "+fm(d.res[L])+" in 2036 against a required "+fm(lastFl)+", at a rate of $"+
+      d.rate.toFixed(2)+", every department still funded to do its work.";
+  }
+  vb.className="verdict"+(cls?" "+cls:"");vt.textContent=title;vs.textContent=sub;
+
+  /* what moving each dial means, in the real world */
+  var MED=310000, ASSD=MED*0.25;
+  function money0(n){return "$"+Math.round(n).toLocaleString()}
+  var penny=d.assessed0/10000, W={};
+  var bill=ASSD*d.rate/100;
+  W.rate='A '+money0(MED)+' home is assessed at '+money0(ASSD)+' and pays <b>'+money0(bill)+
+    ' a year</b> to the city, about '+money0(bill/12)+' a month. Each penny on the rate moves that bill '+
+    '$'+(ASSD/10000).toFixed(2)+' a year and raises <b>'+fm(penny)+'</b> for the city.';
+  W.othg='Sales tax and fees are about two thirds of city revenue, and unlike the property tax they rise with prices on their own. '+
+    'At <b>'+v("othg").toFixed(1)+'%</b> that side grows '+fm(d.rev[0]*0.65*v("othg")/100)+' a year before a single new resident arrives. '+
+    'Set it to zero and the whole budget leans on the property tax instead.';
+  var qtr=d.sales0*0.0025*d.share;
+  W.lost='Every quarter-point on the local rate collects '+fm(d.sales0*0.0025)+' inside the city, of which the city keeps <b>'+
+    fm(qtr)+'</b>, worth about '+(qtr/penny).toFixed(0)+' cents of property tax. '+
+    (function(){var q=Math.round((2.75-v("lost"))/0.25);
+       return q<=0?'The local rate is already at the 2.75% statutory ceiling.'
+         :' The statutory ceiling is 2.75%, so there '+(q===1?'is one quarter-point':'are '+q+' quarter-points')+' left on the table.';})();
+  W.share='Of the '+fm(d.lostAll)+' collected inside the city, the general fund sees <b>'+fm(d.lostCity)+'</b>. '+
+    'One point of that split is '+fm(d.lostAll*0.01)+' a year, about '+(d.lostAll*0.01/penny).toFixed(1)+
+    ' cents of property tax. Getting to half would be worth '+fm(d.lostAll*(0.5-d.share))+' a year.';
+  W.sales='What each resident spends on taxable goods inside the city limits in a year. '+
+    'Higher means Clarksville is capturing retail from the wider region; lower means people are spending it somewhere else, '+
+    'including across the Kentucky line. At <b>'+money0(v("sales"))+'</b> that is '+fm(d.sales0)+' of taxable sales citywide.';
+  var newRes=d.pop[0]*d.g;
+  W.grow='<b>'+(v("grow")).toFixed(1)+'% is about '+Math.round(newRes).toLocaleString()+' new residents a year</b>, roughly '+
+    Math.round(newRes/2.6).toLocaleString()+' households, a subdivision or two. '+
+    'By 2036 the city is serving '+Math.round(d.pop[YRS-1]).toLocaleString()+' people instead of '+Math.round(d.pop[0]).toLocaleString()+'.';
+  W.infl='What a year does to wages, asphalt, fuel and insurance before anyone new arrives. '+
+    'At <b>'+v("infl").toFixed(1)+'%</b>, holding service exactly where it is today costs <b>'+
+    fm(d.cost[0]*v("infl")/100)+' more next year</b> than this year.';
+  var avg=d.cost[0]/d.pop[0];
+  W.mult='Above 1 means growth on the edge: new lane-miles, longer response times, capacity that has to be built. '+
+    'Below 1 means filling in where the pipes and the stations already exist. At <b>'+v("mult").toFixed(2)+
+    '×</b>, a new resident costs about '+money0(avg*d.mult)+' a year to serve against '+money0(avg)+' for someone already here.';
+  DEPTS.forEach(function(x){
+    var sp=d.split[x.id], cut=x.oper-sp.oper, f=Math.round(d.fund[x.id]*100);
+    var t='Payroll is <b>'+fm(x.pers)+'</b> and does not move until you pass the red mark at '+Math.round(x.floor)+'%. '+
+      'Everything above it is '+x.buys+'. ';
+    if(sp.persCut>0) t+='At '+f+'% the operating money is gone and <b>'+fm(sp.persCut)+' is coming out of positions</b>, '+
+      Math.round(sp.persShare*100)+'% of the payroll, which is people, not supplies.';
+    else if(cut>1000) t+='At '+f+'% you have taken <b>'+fm(cut)+'</b> out of that, leaving '+fm(sp.oper)+'.';
+    else t+='At '+f+'% all of it is funded.';
+    W["f-"+x.id]=t;
+  });
+  var days=d.res[0]/(d.cost[0]/365);
+  W.res0='At <b>'+Math.round(v("res0"))+'%</b> the city is carrying '+fm(v("res0")/100*BUDGET0)+
+    ', about <b>'+Math.round(days)+' days</b> of operating spending. That is the cushion for a storm, a lawsuit, '+
+    'or a bad sales tax year, and it is what the rating agencies look at before they price the next bond issue.';
+  W.floor='The floor is not advice, it is a limit. At <b>'+Math.round(v("floor"))+'%</b> the city must hold '+
+    fm(d.floor[0])+' this year, rising to '+fm(d.floor[YRS-1])+' by 2036 as the budget grows. '+
+    'Every dollar of it is money that exists and cannot be spent.';
+  LEV.forEach(function(l){var el=E("why-"+l.id); if(el&&W[l.id])el.innerHTML=W[l.id];});
+
+  LEV.forEach(function(l){
+    if(l.gate===undefined)return;
+    var el=E("gate-"+l.id), cur=v(l.id), moved=Math.abs(cur-l.gate)>1e-9;
+    el.hidden=!moved;
+    if(moved){
+      el.innerHTML='<b>This is not a council vote.</b> '+l.warn+
+        '<br><button type="button" data-reset="'+l.id+'" data-to="'+l.gate+'">Back to '+fmt(l.f,l.gate)+', the actual figure</button>';
+    }
+  });
+
+  E("code-out").value=encode();
+
+  var off=d.breach>=0||stripped.length>0||payrollCut.length>0;
+  E("wrap").className="wrap"+(off?" off":"");
+  E("sbar-state").textContent=off?"Not balanced":"Balanced";
+  if(payrollCut.length||stripped.length){
+    E("sbar-why").textContent=(payrollCut.length?"The cut has reached payroll in ":"Operating budget eliminated in ")+
+      listOf(payrollCut.length?payrollCut:stripped,true)+".";
+    E("sbar-fig").textContent=(payrollCut.length?"positions, not supplies":"paid, but unable to work");
+  }else if(d.breach>=0){
+    var by=d.breach;
+    E("sbar-why").textContent="Fund balance falls below the "+Math.round(v("floor"))+
+      "% statutory minimum in "+(Y0+by)+(d.broke>=0?", and the money runs out in "+(Y0+d.broke):"")+".";
+    E("sbar-fig").textContent=fm(d.res[by])+" held · "+fm(d.floor[by])+" required · short "+fm(d.floor[by]-d.res[by]);
+  }else{
+    var tight=Infinity,ty=0;
+    for(var q=0;q<YRS;q++){var mg=d.res[q]-d.floor[q];if(mg<tight){tight=mg;ty=Y0+q}}
+    E("sbar-why").textContent="Fund balance clears the "+Math.round(v("floor"))+"% statutory minimum in every year through 2036.";
+    E("sbar-fig").textContent="tightest year "+ty+" · "+fm(tight)+" above the floor";
+  }
+}
+
+LEV.forEach(function(l){
+  E(l.id).addEventListener("input",render);
+  var btn=E("w-"+l.id), panel=E("why-"+l.id);
+  btn.addEventListener("click",function(){
+    var open=panel.hidden;
+    panel.hidden=!open; btn.setAttribute("aria-expanded",open?"true":"false");
+    syncExplain();
+  });
+});
+function syncExplain(){
+  var all=LEV.every(function(l){return !E("why-"+l.id).hidden});
+  var b=E("explain-all");
+  b.setAttribute("aria-pressed",all?"true":"false");
+  b.textContent=all?"Hide the explanations":"Explain every dial";
+}
+document.addEventListener("click",function(e){
+  var t=e.target;
+  if(t&&t.getAttribute&&t.getAttribute("data-reset")){
+    E(t.getAttribute("data-reset")).value=t.getAttribute("data-to");
+    render();
+  }
+});
+E("explain-all").addEventListener("click",function(){
+  var open=this.getAttribute("aria-pressed")!=="true";
+  LEV.forEach(function(l){
+    E("why-"+l.id).hidden=!open;
+    E("w-"+l.id).setAttribute("aria-expanded",open?"true":"false");
+  });
+  syncExplain();
+});
+Array.prototype.forEach.call(E("presets").children,function(b){
+  b.addEventListener("click",function(){
+    var s=PRESETS[parseInt(this.dataset.i,10)].s;
+    Object.keys(s).forEach(function(k){E(k).value=s[k]});
+    render();
+  });
+});
+render();
+})();
+</script>
+<script>
+(function(){
+  function post(){
+    var h=Math.max(document.body.scrollHeight,document.documentElement.scrollHeight);
+    try{parent.postMessage({type:"cbs-height",height:h},"*")}catch(e){}
+  }
+  window.addEventListener("load",post);window.addEventListener("resize",post);
+  if(window.ResizeObserver)new ResizeObserver(post).observe(document.body);
+  setInterval(post,1200);
+})();
+</script>
+</body>
+</html>
