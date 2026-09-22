@@ -40,6 +40,19 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fb);font-s
 .wrap.off .sfig{color:#F2CFC7}
 @media(max-width:560px){.sfig{margin-left:0;width:100%}}
 .wrap>.kicker{padding-top:2px}
+.minichart{display:none;position:sticky;top:calc(var(--barh,48px) + env(safe-area-inset-top,0px));z-index:25;
+  margin-inline:-18px;padding:7px 18px 5px;background:var(--panel);border-bottom:1px solid var(--line)}
+.minichart svg{display:block;width:100%;height:52px}
+.mlab{font-family:var(--fm);font-size:10.5px;color:var(--ink-3);display:flex;justify-content:space-between;gap:10px;margin-top:3px}
+.mlab b{font-weight:500}
+@media(max-width:859px),(max-height:819px){.minichart{display:block}}
+@media(min-width:860px) and (min-height:820px){
+  .grid{align-items:stretch}
+  .col-right{height:100%;display:flex;flex-direction:column}
+  .pin{position:sticky;top:calc(var(--barh,48px) + env(safe-area-inset-top,0px) + 14px);z-index:6;
+    max-height:calc(100vh - var(--barh,48px) - env(safe-area-inset-top,0px) - 28px);
+    overflow-y:auto;overscroll-behavior:contain}
+}
 h1,h2{margin:0;font-family:var(--fd);font-weight:500;text-wrap:balance}
 h1{font-size:clamp(28px,5.5vw,42px);font-weight:600;line-height:1.03}
 .kicker{font-family:var(--fm);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);margin:0 0 9px}
@@ -80,35 +93,35 @@ h1{font-size:clamp(28px,5.5vw,42px);font-weight:600;line-height:1.03}
 .lev-name{font-size:14.5px;font-weight:500}
 .lev-val{font-family:var(--fm);font-size:15px;font-weight:500;font-variant-numeric:tabular-nums;color:var(--brass);flex:none}
 .lev-note{font-size:12px;color:var(--ink-3);margin-bottom:8px;line-height:1.4}
-.sec-label{font-family:var(--fm);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);padding:11px 16px 4px;background:var(--panel-2);border-bottom:1px solid var(--line)}
+.sec-label{font-family:var(--fm);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);padding:9px 16px 3px;background:var(--panel-2);border-bottom:1px solid var(--line)}
 input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:16px;background:transparent;margin:0;display:block;cursor:pointer}
 input[type=range]::-webkit-slider-runnable-track{height:3px;background:var(--panel-3);border-radius:2px}
 input[type=range]::-moz-range-track{height:3px;background:var(--panel-3);border-radius:2px}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:2px;background:var(--brass);margin-top:-6.5px}
 input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:2px;background:var(--brass);border:0}
 
-.verdict{padding:17px 18px;border-bottom:1px solid var(--line);border-left:3px solid var(--good)}
+.verdict{padding:14px 18px;border-bottom:1px solid var(--line);border-left:3px solid var(--good)}
 .verdict.warn{border-left-color:var(--warn)}
 .verdict.bad{border-left-color:var(--bad)}
-.verdict h2{font-size:22px;font-weight:600;line-height:1.14;margin-bottom:6px}
+.verdict h2{font-size:20px;font-weight:600;line-height:1.14;margin-bottom:6px}
 .verdict p{margin:0;font-size:14px;color:var(--ink-2)}
 
-.plot{padding:14px 12px 4px}
+.plot{padding:10px 12px 2px}
 .plot svg{display:block;width:100%;height:auto}
-.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:12px;color:var(--ink-2);padding:0 16px 12px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12px;color:var(--ink-2);padding:0 16px 8px}
 .legend span{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
 .legend i{width:18px;height:0;border-top:2.5px solid;flex:none}
 
-.years{display:flex;gap:2px;padding:8px 16px 14px}
+.years{display:flex;gap:2px;padding:6px 16px 10px}
 .ycell{flex:1;min-width:0}
-.ybox{position:relative;height:56px}
+.ybox{position:relative;height:46px}
 .ybox i{position:absolute;left:0;right:0;border-radius:1px;transition:top .18s ease,height .18s ease,background .18s ease}
 .zero{position:absolute;left:0;right:0;border-top:1px dashed var(--line-2);pointer-events:none}
 .ybox u{position:absolute;left:-1px;right:-1px;height:0;border-top:2px dotted var(--brass);opacity:.85;transition:top .18s ease}
 .years b{font-family:var(--fm);font-size:9px;font-weight:400;color:var(--ink-3);text-align:center;margin-top:5px;display:block}
 
-.meters{padding:6px 16px 16px}
-.mrow{display:flex;align-items:center;gap:11px;padding:7px 0}
+.meters{padding:3px 16px 11px}
+.mrow{display:flex;align-items:center;gap:11px;padding:5px 0}
 .mrow .nm{font-size:13.5px;width:140px;flex:none}
 .mrow .tr{flex:1;height:6px;background:var(--panel-3);border-radius:3px;overflow:hidden;min-width:0}
 .mrow .tr i{display:block;height:100%;transition:width .18s ease,background .18s ease}
@@ -119,9 +132,9 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:2px;bac
 .lostcalc b{color:var(--ink);font-weight:500}
 .lostcalc em{color:var(--brass);font-style:normal}
 .tally{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
-.tally div{background:var(--panel-2);padding:12px 11px}
+.tally div{background:var(--panel-2);padding:9px 11px}
 .tally .k{font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:3px}
-.tally .v{font-family:var(--fd);font-size:18px;font-weight:600;font-variant-numeric:tabular-nums}
+.tally .v{font-family:var(--fd);font-size:17px;font-weight:600;font-variant-numeric:tabular-nums}
 .work{margin-top:16px}
 .rates{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line);border-bottom:1px solid var(--line)}
 @media(min-width:620px){.rates{grid-template-columns:repeat(3,minmax(0,1fr))}}
@@ -196,6 +209,10 @@ footer{margin-top:30px;padding-top:18px;border-top:1px solid var(--line);font-si
   <span class="swhy" id="sbar-why">-</span>
   <span class="sfig mono" id="sbar-fig"></span>
 </div>
+<div class="minichart" id="minichart" aria-hidden="true">
+  <svg id="mchart" viewBox="0 0 640 64" preserveAspectRatio="none"></svg>
+  <div class="mlab" id="mlab"></div>
+</div>
 <p class="kicker">City of Clarksville &middot; adopted FY2027 budget &middot; ten years out</p>
 <h1>Clarksville Budget Sandbox</h1>
 <p class="lede">Built on the city&rsquo;s FY2027 budget book. Every dial changes the next ten years the moment you move it. Cut a department far enough and you pass the point where the payroll is covered but there is no money left for fuel, parts or supplies. The sliders show you exactly where that line is.</p>
@@ -238,14 +255,14 @@ footer{margin-top:30px;padding-top:18px;border-top:1px solid var(--line);font-si
   <div id="lev-d"></div>
  </div>
 
- <div>
-  <div class="card">
+ <div class="col-right">
+  <div class="card pin">
    <div class="verdict" id="verdict"><h2 id="v-title">-</h2><p id="v-sub">-</p></div>
    <div class="legend">
     <span><i style="border-color:var(--rev)"></i><span id="lg-rev">Revenue</span></span>
     <span><i style="border-color:var(--cost)"></i>Cost of services</span>
    </div>
-   <div class="plot"><svg id="chart" viewBox="0 0 640 220" role="img" aria-labelledby="ct cd"><title id="ct">Revenue against the cost of services</title><desc id="cd">Two lines over eleven years; the band between them is the annual surplus or shortfall.</desc></svg></div>
+   <div class="plot"><svg id="chart" viewBox="0 0 640 190" role="img" aria-labelledby="ct cd"><title id="ct">Revenue against the cost of services</title><desc id="cd">Two lines over eleven years; the band between them is the annual surplus or shortfall.</desc></svg></div>
    <div class="sec-label" style="border-top:1px solid var(--line)">Fund balance, year by year <span style="text-transform:none;letter-spacing:0;float:right;color:var(--brass)">&middot;&middot;&middot; required minimum</span></div>
    <div class="years" id="years"></div>
    <div class="sec-label">Service levels in 2036</div>
@@ -448,11 +465,11 @@ function model(){
   return d;
 }
 
-var PAD={l:52,r:12,t:12,b:26};
+var PAD={l:52,r:12,t:10,b:24};
 function X(i,W){return PAD.l+i*(W-PAD.l-PAD.r)/(YRS-1)}
 function Y(val,H,lo,hi){return H-PAD.b-(val-lo)/(hi-lo)*(H-PAD.t-PAD.b)}
 function chart(d){
-  var W=640,H=220,hi=0;
+  var W=640,H=190,hi=0;
   d.rev.concat(d.cost).forEach(function(x){if(x>hi)hi=x});
   var step=Math.pow(10,Math.floor(Math.log10(hi/4)));
   var n=hi/4/step;step*=(n<=1?1:n<=2?2:n<=2.5?2.5:n<=5?5:10);
@@ -545,11 +562,36 @@ E("code-load").addEventListener("click",function(){
 E("code-in").addEventListener("keydown",function(e){if(e.key==="Enter")E("code-load").click()});
 E("code-in").addEventListener("input",function(){msg("")});
 
+function setBarH(){
+  document.documentElement.style.setProperty("--barh", E("sbar").offsetHeight+"px");
+}
+function mini(d){
+  var W=640,H=64,P=5,hi=0,lo=Infinity,i;
+  d.rev.concat(d.cost).forEach(function(x){if(x>hi)hi=x;if(x<lo)lo=x});
+  var span=(hi-lo)||hi*0.1; lo-=span*0.25; hi+=span*0.25;
+  function X(i){return i*W/(YRS-1)}
+  function Y(v){return H-P-(v-lo)/(hi-lo)*(H-P*2)}
+  var up=[],dn=[];
+  for(i=0;i<YRS;i++){up.push(X(i).toFixed(1)+","+Y(d.rev[i]).toFixed(1));
+                     dn.push(X(i).toFixed(1)+","+Y(d.cost[i]).toFixed(1));}
+  var short=d.cost[YRS-1]>d.rev[YRS-1];
+  E("mchart").innerHTML=
+    '<polygon points="'+up.join(" ")+" "+dn.slice().reverse().join(" ")+
+      '" style="fill:'+(short?"var(--cost)":"var(--good)")+';opacity:.18"/>'+
+    '<polyline points="'+up.join(" ")+'" style="fill:none;stroke:var(--rev);stroke-width:2;vector-effect:non-scaling-stroke"/>'+
+    '<polyline points="'+dn.join(" ")+'" style="fill:none;stroke:var(--cost);stroke-width:2;vector-effect:non-scaling-stroke"/>';
+  var gap=d.rev[YRS-1]-d.cost[YRS-1];
+  E("mlab").innerHTML='<span>2026</span><span><b style="color:var(--rev)">revenue</b> v '+
+    '<b style="color:var(--cost)">cost</b>, 2036 gap <b style="color:'+
+    (gap<0?"var(--bad)":"var(--good)")+'">'+(gap>=0?"+":"")+fm(gap)+'</b></span><span>2036</span>';
+}
+
 function render(){
   LEV.forEach(function(l){E("o-"+l.id).textContent=fmt(l.f,v(l.id))});
   var d=model();
   E("lg-rev").textContent="Revenue at $"+d.rate.toFixed(2);
   chart(d);
+  mini(d);
 
   /* department operating readouts */
   DEPTS.forEach(function(x){
@@ -650,7 +692,7 @@ function render(){
   E("tbl").innerHTML=tb;
 
   /* fund balance strip */
-  var H=56, hiP=0, hiN=0;
+  var H=46, hiP=0, hiN=0;
   d.res.forEach(function(r){if(r>hiP)hiP=r;if(-r>hiN)hiN=-r});
   d.floor.forEach(function(f){if(f>hiP)hiP=f});
   if(hiP<=0)hiP=1;
@@ -847,7 +889,9 @@ Array.prototype.forEach.call(E("presets").children,function(b){
     render();
   });
 });
+window.addEventListener("resize",setBarH);
 render();
+setBarH();
 })();
 </script>
 <script>
