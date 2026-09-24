@@ -3,15 +3,29 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="Clarksville's FY2027 budget as a model: set the tax rate, growth and department funding, and see ten years of consequences.">
-<meta property="og:title" content="Clarksville Budget Sandbox">
-<meta property="og:description" content="Built on the FY2027 budget book. Move any dial and watch ten years redraw.">
+<title>Clarksville Budget Sandbox — FY2027</title>
+<meta name="description" content="Move the dials on the City of Clarksville's adopted FY2027 general fund budget and watch ten years recalculate: property tax, local option sales tax, department funding, and the fund balance floor.">
+<meta name="theme-color" content="#141A21">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%23141A21'/%3E%3Crect x='6' y='18' width='5' height='9' fill='%23C9973F'/%3E%3Crect x='13.5' y='12' width='5' height='15' fill='%23C9973F'/%3E%3Crect x='21' y='6' width='5' height='21' fill='%236CA8D9'/%3E%3C/svg%3E">
+
+<!-- Link preview. Replace the two absolute URLs below with your Pages URL,
+     e.g. https://USERNAME.github.io/REPO/ - some scrapers will not resolve a relative path. -->
 <meta property="og:type" content="website">
-<style>html,body{background:#141A21}html{-webkit-text-size-adjust:100%}</style>
-<title>Clarksville Budget Sandbox</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<meta property="og:title" content="Clarksville Budget Sandbox — FY2027">
+<meta property="og:description" content="Move the dials on the City of Clarksville's adopted FY2027 general fund budget and watch ten years recalculate: property tax, local option sales tax, department funding, and the fund balance floor.">
+<meta property="og:url" content="./">
+<meta property="og:image" content="./preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Clarksville Budget Sandbox — FY2027">
+<meta name="twitter:description" content="Move the dials on the City of Clarksville's adopted FY2027 general fund budget and watch ten years recalculate: property tax, local option sales tax, department funding, and the fund balance floor.">
+<meta name="twitter:image" content="./preview.png">
+<style>
+:root{color-scheme:dark;box-sizing:border-box}
+img{max-width:100%}
+[hidden]:not([hidden=until-found i]){display:none!important}
+</style>
 <style>
 :root{
   --bg:#141A21; --panel:#1B232C; --panel-2:#222C36; --panel-3:#2A3540;
@@ -19,9 +33,9 @@
   --ink:#E9E5DB; --ink-2:#A5B0BA; --ink-3:#6E7B87;
   --brass:#C9973F; --rev:#6CA8D9; --cost:#D9765C;
   --good:#71A66C; --warn:#D9A441; --bad:#C45C4A;
-  --fd:"Oswald","Helvetica Neue",Arial,sans-serif;
-  --fb:"Public Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  --fm:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --fd:"Oswald","Arial Narrow",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --fb:"Public Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --fm:"IBM Plex Mono",ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fb);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
@@ -199,6 +213,11 @@ footer{margin-top:30px;padding-top:18px;border-top:1px solid var(--line);font-si
   padding:3px 11px;cursor:pointer;margin-top:-3px}
 .explain:hover{border-color:var(--brass);color:var(--ink)}
 .explain:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.prov{margin-top:20px;display:grid;grid-template-columns:1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+@media(min-width:680px){.prov{grid-template-columns:1fr 1fr}}
+.prov div{background:var(--panel);padding:13px 16px}
+.prov p{margin:0;font-size:13px;line-height:1.6;color:var(--ink-3)}
+.prov b{display:block;font-family:var(--fm);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--brass);margin-bottom:5px;font-weight:500}
 </style>
 </head>
 <body>
@@ -215,7 +234,12 @@ footer{margin-top:30px;padding-top:18px;border-top:1px solid var(--line);font-si
 </div>
 <p class="kicker">City of Clarksville &middot; adopted FY2027 budget &middot; ten years out</p>
 <h1>Clarksville Budget Sandbox</h1>
-<p class="lede">Built on the city&rsquo;s FY2027 budget book. Every dial changes the next ten years the moment you move it. Cut a department far enough and you pass the point where the payroll is covered but there is no money left for fuel, parts or supplies. The sliders show you exactly where that line is.</p>
+<p class="lede">Built on the city&rsquo;s adopted FY2027 budget, as passed on second reading July 9, 2026. Every dial changes the next ten years the moment you move it. Cut a department far enough and you pass the point where the payroll is covered but there is no money left for fuel, parts or supplies. The sliders show you exactly where that line is.</p>
+
+<div class="prov">
+  <div><p><b>What this is</b>A working model of the City of Clarksville general fund, built from the adopted FY2027 budget and the city&rsquo;s published financial reports. Every figure on the page recalculates the moment you move a dial. The file runs entirely in your own browser, sends nothing anywhere, and works with no internet connection.</p></div>
+  <div><p><b>What it is not</b>Not a City of Clarksville publication, and not a forecast. It is arithmetic: it shows what follows from the assumptions you set, and those assumptions are yours to argue with. The source for every starting figure is at the foot of the page.</p></div>
+</div>
 
 <div class="presets" id="presets"></div>
 
@@ -288,8 +312,8 @@ footer{margin-top:30px;padding-top:18px;border-top:1px solid var(--line);font-si
 </div>
 
 <footer>
-<p style="margin:0 0 10px">Every starting figure is taken from the City of Clarksville Fiscal Year 2027 budget book, from the columns headed &ldquo;FY2027 Proposed&rdquo; in the Mayor&rsquo;s transmitted budget of May 1, 2026: a $8.06B assessed tax base, $81,436,513 of property tax at the adopted $1.01 rate, $34,168,124 of local option sales tax, $189,435,257 of total revenue, and $187,894,893 of total expenditures against $153,586,035 of department appropriations. Each department is split into its salary-and-wage accounts and its operating accounts exactly as the budget book reports them.</p>
-<p style="margin:0">Property tax revenue grows only with the tax base, because Tennessee&rsquo;s certified tax rate law makes reappraisal revenue-neutral, so rising home values alone never appear here as new money. Debt service, transit, and the shared and agency obligations are shown as fixed, because they are: they are contractual or intergovernmental and a council cannot cut them in a budget session. Rates are dollars per $100 of assessed value.</p>
+<p style="margin:0 0 10px">Every starting figure is taken from the City of Clarksville&rsquo;s adopted Fiscal Year 2027 budget, the &ldquo;2nd Reading&rdquo; columns of the final budget document the city released July 27, 2026: $66,373,106 of current-year property tax at the adopted $1.01 rate, $31,597,301 of local option sales tax, $170,640,376 of general fund revenue, and $178,728,553 of general fund expenditures, $143,154,550 of it in department appropriations. The assessed tax base is $6,772,805,336, the City of Clarksville&rsquo;s total assessment for the 2025 tax year as published in the State Board of Equalization&rsquo;s 2025 Tax Aggregate Report of Tennessee, against an estimated market value of $22.9 billion. At the adopted $1.01 that base levies $68.4M. The budget books $66,373,106 of current-year property tax, which works out to an effective $0.98 per $100, or a collection rate of about 97 percent. This model levies at the full rate and does not apply that discount. Each department is split into its salary-and-wage accounts, its operating accounts and its capital purchases exactly as the budget reports them.</p>
+<p style="margin:0">Property tax revenue grows only with the tax base, because Tennessee&rsquo;s certified tax rate law makes reappraisal revenue-neutral, so rising home values alone never appear here as new money. Debt service, transit, retiree health insurance, and the shared and agency obligations are shown as fixed, because they are: they are contractual or intergovernmental and a council cannot cut them in a budget session. Rates are dollars per $100 of assessed value.</p>
 </footer>
 </div>
 
@@ -305,27 +329,27 @@ function clamp(v,a,b){return v<a?a:v>b?b:v}
 
 /* ---- FY2027 budget book, City of Clarksville ---- */
 var P0=187000, YRS=11, Y0=2026;
-var BASE_PC=43118;        // assessed value per resident ($8.063B / 187,000)
-var SALES_PC=28110;       // taxable sales per resident, set so 2.5% x 26% = $34,168,124
-var OTHER_PC=394.82;         // all revenue that is not property tax or local option
-var FIXED0=34308858;      // debt service, transit, agencies, shared obligations
-var BUDGET0=187894893;    // total FY27 expenditures and financing uses
+var BASE_PC=36218.210;    // assessed value per resident ($6,772,805,336 / 187,000), 2025 Tax Aggregate Report
+var SALES_PC=26000;       // taxable sales per resident, set so 2.5% x 26% = $31.6M (adopted $31,597,301)
+var OTHER_PC=381.6437;    // all other revenue, set so total FY27 revenue = $170,640,376 adopted
+var FIXED0=35574003;      // debt service transfer, transit, agencies, museum, retiree health
+var BUDGET0=178728553;    // total FY27 general fund expenditures, adopted
 
 var DEPTS=[
- {id:"safety", name:"Police, fire, dispatch", tot:92927851, pers:78191676, oper:10999779, off:+.001,
+ {id:"safety", name:"Police, fire, dispatch", tot:90476851, pers:78191676, oper:10948779, off:+.001,
   buys:"fuel, vehicle maintenance, turnout gear, radios, ammunition, evidence supplies and training"},
- {id:"streets",name:"Street department",      tot:20243086, pers: 9356216, oper:10125870, off:+.005,
+ {id:"streets",name:"Street department",      tot:17756176, pers: 9356216, oper: 7838960, off:+.005,
   buys:"asphalt, salt, signs, striping, mowing, culverts and equipment repair"},
- {id:"parks",  name:"Parks, rec and golf",    tot:13354395, pers: 8913238, oper: 3919336, off:-.005,
+ {id:"parks",  name:"Parks, rec and golf",    tot:12798484, pers: 8899238, oper: 3869264, off:-.005,
   buys:"mowing, pool chemicals, field and court maintenance, program supplies and utilities"},
- {id:"general",name:"General government",     tot:27060703, pers:14874931, oper: 5913437, off:-.003,
+ {id:"general",name:"General government",     tot:22123039, pers:16913810, oper: 5202704, off:-.003,
   buys:"utilities, software licences, the annual audit, outside legal work and building repairs"}
 ];
 DEPTS.forEach(function(d){d.cap=d.tot-d.pers-d.oper; d.floor=d.pers/d.tot*100;});
 
 var LEV=[
  {box:"lev-a",id:"rate",name:"Property tax rate",min:.5,max:2.5,step:.01,v:1.01,f:"rate",
-  note:"The FY27 adopted rate, up nine cents from $0.92. Raises $81.4M on an $8.06B assessed base."},
+  note:"The FY27 adopted rate, up nine cents from $0.92. Levies $68.4M on the city's $6.77B assessed base; each penny is worth $677K."},
  {box:"lev-a",id:"othg",name:"Sales and fee growth",min:0,max:4,step:.1,v:2.0,f:"pcty",
   note:"Retail sales, fees and state-shared taxes per resident. Unlike the property tax, this side rises with prices on its own."},
  {box:"lev-s",id:"lost",name:"Local option rate",min:0,max:2.75,step:.05,v:2.50,f:"pct2",
@@ -336,8 +360,8 @@ var LEV=[
   badge:"State law", gate:26,
   note:"Half of a countywide levy goes to education off the top by statute, and the city keeps only part of what is left. Raising the local rate is worth about a quarter to the city of what the headline suggests.",
   warn:"The split is <b>set in state law</b>: half of a countywide levy goes to education on the school attendance formula, and the rest follows where it was collected. A city cannot vote itself a larger share. The two routes are an <b>interlocal agreement with Montgomery County</b>, which state law does permit, or the <b>General Assembly</b>. Both are measured in years, and neither is in the city's gift. Treat any number here as an argument to go make, not a lever to pull."},
- {box:"lev-s",id:"sales",name:"Taxable sales per resident",min:8000,max:40000,step:10,v:28110,f:"money",
-  note:"Set so the calculation reproduces the $34,168,124 of local option sales tax in the FY27 budget."},
+ {box:"lev-s",id:"sales",name:"Taxable sales per resident",min:8000,max:40000,step:10,v:26000,f:"money",
+  note:"Set so the calculation reproduces the $31.6M of local option sales tax in the adopted FY27 budget."},
  {box:"lev-b",id:"grow",name:"Population growth",min:0,max:4,step:.1,v:2.1,f:"pcty",
   note:"Clarksville has run 2 to 3 percent for a decade, roughly 4,000 people a year."},
  {box:"lev-b",id:"infl",name:"Cost inflation",min:0,max:5,step:.1,v:1.9,f:"pcty",
@@ -348,21 +372,21 @@ var LEV=[
  {box:"lev-c",id:"f-streets",name:"Street department",      min:40,max:115,step:1,v:100,f:"pct"},
  {box:"lev-c",id:"f-parks",  name:"Parks, rec and golf",    min:40,max:115,step:1,v:100,f:"pct"},
  {box:"lev-c",id:"f-general",name:"General government",     min:40,max:115,step:1,v:100,f:"pct"},
- {box:"lev-d",id:"res0",name:"Fund balance today",min:0,max:40,step:1,v:17,f:"pctbud",
-  note:"As a share of the annual budget. The FY27 book projects an ending balance of $40.8M, or 21.7 percent of total expenditures. At 17 percent the city is sitting exactly on the policy minimum with nothing above it."},
+ {box:"lev-d",id:"res0",name:"Fund balance today",min:0,max:40,step:1,v:22,f:"pctbud",
+  note:"As a share of the annual budget. The adopted FY27 budget starts the year with an estimated $39.2M, about 22 percent, and spends $8.1M of it to close the year at $31.1M, about 17 percent: on the policy minimum with nothing above it."},
  {box:"lev-d",id:"floor",name:"Required minimum",min:0,max:35,step:1,v:17,f:"pctbud2",
   note:"The city may not carry a fund balance below this share of the annual budget. The dollar figure rises every year the budget does."}
 ];
 
-var BASE={rate:1.01,othg:2.0,lost:2.50,share:26,sales:28110,grow:2.1,infl:1.9,mult:1.15,
-  res0:17,floor:17,"f-safety":100,"f-streets":100,"f-parks":100,"f-general":100};
+var BASE={rate:1.01,othg:2.0,lost:2.50,share:26,sales:26000,grow:2.1,infl:1.9,mult:1.15,
+  res0:22,floor:17,"f-safety":100,"f-streets":100,"f-parks":100,"f-general":100};
 function mix(o){var r={},k;for(k in BASE)r[k]=BASE[k];for(k in o)r[k]=o[k];return r}
 var PRESETS=[
  {n:"FY27 as adopted",      s:mix({})},
- {n:"Pay for it with rate",  s:mix({rate:1.36})},
+ {n:"Pay for it with rate",  s:mix({rate:1.24})},
  {n:"Cut every department 10%", s:mix({"f-safety":90,"f-streets":90,"f-parks":90,"f-general":90})},
- {n:"Strip the operating budgets", s:mix({"f-safety":85,"f-streets":47,"f-parks":67,"f-general":55})},
- {n:"Cut into payroll",      s:mix({"f-safety":80,"f-streets":42,"f-parks":60,"f-general":50})},
+ {n:"Strip the operating budgets", s:mix({"f-safety":87,"f-streets":53,"f-parks":70,"f-general":77})},
+ {n:"Cut into payroll",      s:mix({"f-safety":82,"f-streets":48,"f-parks":64,"f-general":72})},
  {n:"Spare public safety",   s:mix({"f-safety":100,"f-streets":60,"f-parks":70,"f-general":70})},
  {n:"Growth doubles",        s:mix({grow:4.0})},
  {n:"Costs run hot",         s:mix({infl:3.2})},
@@ -610,7 +634,7 @@ function render(){
         ' · payroll '+fm(x.pers)+' held';
     }
   });
-  E("fixedrow").innerHTML='<b>Fixed obligations '+fm(d.fixed0)+'</b>: debt service, transit, and the shared and agency commitments. '+
+  E("fixedrow").innerHTML='<b>Fixed obligations '+fm(d.fixed0)+'</b>: debt service, transit, retiree health insurance, and the shared and agency commitments. '+
     'Contractual or intergovernmental, so no slider touches them.';
 
   var lost=v("lost"), share=v("share");
@@ -636,13 +660,13 @@ function render(){
   var st="";
   st+='<div class="sgroup">What the city collects in 2026</div>';
   st+='<div class="step"><div class="slabel">Assessed value of everything taxable</div><div class="smath">'+
-      N(Math.round(pop0).toLocaleString())+' residents × '+N("$43,118")+' assessed each = '+R(M(d.assessed0))+'</div></div>';
+      N(Math.round(pop0).toLocaleString())+' residents × '+N("$36,218")+' assessed each = '+R(M(d.assessed0))+'</div></div>';
   st+='<div class="step"><div class="slabel">Property tax</div><div class="smath">'+
       R(M(d.assessed0))+' × '+N("$"+d.rate.toFixed(2))+' ÷ $100 of assessed value = '+R(M(d.prop0))+'</div></div>';
   st+='<div class="step"><div class="slabel">Local option sales tax the city keeps</div><div class="smath">'+
       M(d.sales0)+' taxable sales × '+N(pc(d.lost,2))+' × '+N(pc(d.share,0))+' = '+R(M(d.lostCity))+'</div></div>';
   st+='<div class="step"><div class="slabel">Everything else: fees, fines, state-shared taxes, in-lieu transfers</div><div class="smath">'+
-      N(Math.round(pop0).toLocaleString())+' × '+N("$395")+' each = '+R(M(d.other0))+'</div></div>';
+      N(Math.round(pop0).toLocaleString())+' × '+N("$382")+' each = '+R(M(d.other0))+'</div></div>';
   st+='<div class="step"><div class="slabel">Total revenue, 2026</div><div class="smath">'+
       M(d.prop0)+' + '+M(d.lostCity)+' + '+M(d.other0)+' = '+R(M(d.rev[0]))+'</div></div>';
   st+='<div class="sgroup">What the city spends in 2026</div>';
@@ -652,7 +676,7 @@ function render(){
     lines.push(x.name+' '+M(x.tot)+' × '+N(Math.round(d.fund[x.id]*100)+"%")+' = '+R(M(s.funded))+
       ' <span style="color:var(--ink-3)">(payroll '+M(s.pers)+', operating '+M(s.oper)+')</span>');
   });
-  lines.push('Fixed obligations '+R(M(d.fixed0))+' <span style="color:var(--ink-3)">(debt service, transit, agencies)</span>');
+  lines.push('Fixed obligations '+R(M(d.fixed0))+' <span style="color:var(--ink-3)">(debt service, transit, agencies, retiree health)</span>');
   st+='<div class="step"><div class="slabel">Each department, at the funding level you set</div><div class="smath">'+
       lines.join('<br>')+'<br>total = '+R(M(d.cost[0]))+'</div></div>';
   st+='<div class="sgroup">What changes each year after that</div>';
@@ -775,8 +799,8 @@ function render(){
   W.rate='A '+money0(MED)+' home is assessed at '+money0(ASSD)+' and pays <b>'+money0(bill)+
     ' a year</b> to the city, about '+money0(bill/12)+' a month. Each penny on the rate moves that bill '+
     '$'+(ASSD/10000).toFixed(2)+' a year and raises <b>'+fm(penny)+'</b> for the city.';
-  W.othg='Sales tax and fees are about two thirds of city revenue, and unlike the property tax they rise with prices on their own. '+
-    'At <b>'+v("othg").toFixed(1)+'%</b> that side grows '+fm(d.rev[0]*0.65*v("othg")/100)+' a year before a single new resident arrives. '+
+  W.othg='Sales tax, fees and state-shared taxes are about three fifths of city revenue, and unlike the property tax they rise with prices on their own. '+
+    'At <b>'+v("othg").toFixed(1)+'%</b> that side grows '+fm(d.rev[0]*0.6*v("othg")/100)+' a year before a single new resident arrives. '+
     'Set it to zero and the whole budget leans on the property tax instead.';
   var qtr=d.sales0*0.0025*d.share;
   W.lost='Every quarter-point on the local rate collects '+fm(d.sales0*0.0025)+' inside the city, of which the city keeps <b>'+
@@ -892,17 +916,6 @@ Array.prototype.forEach.call(E("presets").children,function(b){
 window.addEventListener("resize",setBarH);
 render();
 setBarH();
-})();
-</script>
-<script>
-(function(){
-  function post(){
-    var h=Math.max(document.body.scrollHeight,document.documentElement.scrollHeight);
-    try{parent.postMessage({type:"cbs-height",height:h},"*")}catch(e){}
-  }
-  window.addEventListener("load",post);window.addEventListener("resize",post);
-  if(window.ResizeObserver)new ResizeObserver(post).observe(document.body);
-  setInterval(post,1200);
 })();
 </script>
 </body>
